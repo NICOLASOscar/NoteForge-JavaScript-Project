@@ -9,8 +9,30 @@
         <li><a href="/components/home.html">Accueil</a></li>
         <li><a href="#">Fonctionnalités</a></li>
         <li><a href="#">À propos</a></li>
-        <li><a href="/components/login.html">Connexion</a></li>
+        <li><a href="/components/login.html" id="login-link">Connexion</a></li>
+        <li><a href="/components/account.html" id="profile-link" class="hidden">Profil</a></li>
+        <li><button id="logout-btn" class="btn btn-logout hidden">Déconnexion</button></li>
       </ul>
     </nav>
   </header>
+  
+  <script>
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const loginLink = document.getElementById("login-link");
+    const profileLink = document.getElementById("profile-link");
+    const logoutBtn = document.getElementById("logout-btn");
+  
+    if (isLoggedIn) {
+      loginLink.classList.add("hidden");
+      profileLink.classList.remove("hidden");
+      logoutBtn.classList.remove("hidden");
+  
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userEmail");
+        alert("Déconnecté !");
+        window.location.href = "/components/login.html";
+      });
+    }
+  </script>
   

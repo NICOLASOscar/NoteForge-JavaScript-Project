@@ -50,6 +50,25 @@ html, body {
   justify-content: space-between;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.btn-logout {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.btn-logout:hover {
+  text-decoration: underline;
+}
+
+
+
 main {
   flex: 1; /* pousse le footer en bas même si peu de contenu */
 }
@@ -294,6 +313,22 @@ footer {
   color: var(--blanc);
   margin-bottom: 1.5rem;
 }
+
+.signup-feedback {
+  margin-top: 1rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.signup-feedback.error {
+  color: #ff4d4d;
+}
+
+.signup-feedback.success {
+  color: #4caf50;
+}
+
+
 
 .form-group {
   text-align: left;

@@ -17,6 +17,11 @@ export function initEditor() {
   const preview = document.getElementById("markdown-preview");
   const downloadBtn = document.getElementById("download-pdf");
 
+
+  const draft = localStorage.getItem("noteForgeDraft");
+    if (draft) {
+    textarea.value = draft;
+    }
   if (!textarea || !preview || !downloadBtn) {
     console.warn("initEditor() : éléments non trouvés !");
     return;
@@ -36,6 +41,9 @@ export function initEditor() {
     }
 
   textarea.addEventListener("input", updatePreview);
+  textarea.addEventListener("input", () => {
+    localStorage.setItem("noteForgeDraft", textarea.value);
+  });
   updatePreview();
 
   downloadBtn.addEventListener("click", async () => {
