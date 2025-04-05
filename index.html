@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NoteForge</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
-  <script defer src="/assets/js/main.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="icon" type="image/png" href="assets/img/NoteForgeLogoWOTextWhite.png" />
 </head>
+
 <body>
 
   <!-- 🎆 Fond animé -->
@@ -35,10 +35,25 @@
     </div>
   </div>
 
-  <!-- 🧩 Contenu dynamique -->
-  <div id="main-container">
+  <!-- 🧩 Conteneurs SPA -->
+  <div id="header-container"></div>
+  <div id="main-container"></div>
+  <div id="footer-container"></div>
 
-</div>
+  <!-- 📦 Librairies externes globales -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+  <!-- 🔣 MathJax pour LaTeX -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- 🚀 Script principal SPA -->
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

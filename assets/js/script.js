@@ -1,62 +1,67 @@
-const textarea = document.getElementById('markdown-input');
-const preview = document.getElementById('markdown-preview');
-const downloadBtn = document.getElementById('download-pdf');
+// Import ESModule de marked
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
 
-function updatePreview() {
-    preview.innerHTML = marked.parse(textarea.value);
+export function initEditor() {
+  const textarea = document.getElementById("markdown-input");
+  const preview = document.getElementById("markdown-preview");
+  const downloadBtn = document.getElementById("download-pdf");
 
-    // Assurer que MathJax recharge le contenu
-    if (window.MathJax) {
-        MathJax.typesetPromise([preview]).then(() => {
-            console.log("MathJax rendu terminé !");
-        }).catch(err => console.log("Erreur MathJax :", err));
-    }
+  if (!textarea || !preview || !downloadBtn) {
+    console.warn("initEditor() : éléments non trouvés !");
+    return;
+  }
+
+  function updatePreview() {
+    const raw = textarea.value;
+    const html = marked.parse(raw);
+    preview.innerHTML = html;
+    if (window.MathJax) MathJax.typesetPromise([preview]);
+  }
+
+  textarea.addEventListener("input", updatePreview);
+  updatePreview();
+
+  downloadBtn.addEventListener("click", async () => {
+    if (window.MathJax) await MathJax.typesetPromise([preview]);
+  
+    // Cloner le contenu (mais pas les styles)
+    const cleanContent = document.createElement("div");
+    cleanContent.innerHTML = preview.innerHTML;
+    cleanContent.style.fontFamily = "sans-serif";
+    cleanContent.style.color = "#000000";
+    cleanContent.style.background = "#ffffff";
+    cleanContent.style.padding = "2rem";
+    cleanContent.style.width = "800px";
+    cleanContent.style.lineHeight = "1.5";
+    cleanContent.style.fontSize = "1rem";
+  
+    // Créer une zone invisible pour la capture
+    const container = document.createElement("div");
+    container.style.position = "fixed";
+    container.style.top = "-9999px";
+    container.style.left = "0";
+    container.style.zIndex = "-1";
+    container.style.background = "#ffffff";
+    container.appendChild(cleanContent);
+    document.body.appendChild(container);
+  
+    // Capture propre
+    html2canvas(cleanContent, {
+      backgroundColor: "#ffffff",
+      scale: 2
+    }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jspdf.jsPDF("p", "mm", "a4");
+  
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("NoteForge_export.pdf");
+  
+      document.body.removeChild(container); // Nettoyage
+    });
+  });
+  
 }
-
-textarea.addEventListener('input', updatePreview);
-
-// Valeur initiale pour tester
-textarea.value = `# Markdown + LaTeX  
-
-Voici une équation LaTeX :  
-\$\$ E = mc^2 \$\$  
-
-Et un code JS :  
-\`\`\`js
-console.log("Hello World!");
-\`\`\`
-`;
-
-updatePreview();
-
-downloadBtn.addEventListener('click', async () => {
-    const fileName = prompt("Entrez le nom du fichier PDF :", "mon_document");
-    if (!fileName) return;
-
-    console.log("Début du téléchargement...");
-
-    // Attendre MathJax pour s'assurer que les équations sont bien rendues
-    if (window.MathJax) {
-        try {
-            await MathJax.typesetPromise([preview]);
-            console.log("MathJax a fini son rendu !");
-        } catch (err) {
-            console.error("Erreur lors du rendu MathJax :", err);
-        }
-    }
-
-    // Capturer l'aperçu après le rendu de MathJax
-    html2canvas(preview, { backgroundColor: null, scale: 2 }).then(canvas => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-
-        const imgData = canvas.toDataURL('image/png');
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        doc.save(`${fileName}.pdf`);
-
-        console.log("PDF téléchargé !");
-    }).catch(err => console.error("Erreur lors de la capture du PDF :", err));
-});

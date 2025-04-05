@@ -1,29 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Éditeur Markdown & LaTeX</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    
-    <!-- Chargement de MathJax pour rendre le LaTeX -->
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script async src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head>
-<body>
-    <textarea id="markdown-input" placeholder="Entrez votre Markdown ou LaTeX ici..."></textarea>
+<div class="editor-section">
+  <div class="editor-toolbar">
+    <button class="btn" id="download-pdf">⬇ Télécharger en PDF</button>
+  </div>
+
+  <div class="editor-grid">
+    <textarea id="markdown-input" placeholder="Écris ton Markdown ou LaTeX ici..."></textarea>
     <div class="preview" id="markdown-preview"></div>
-    <button id="download-pdf">Télécharger en PDF</button>
-    
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="/assets/js/script.js"></script>
-</body>
-</html>
+  </div>
+</div>
