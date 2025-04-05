@@ -1,223 +1,336 @@
-/* 🎨 Couleurs principales */
+/* 🎨 Variables */
 :root {
-    --bleu-nuit: #0a192f;
-    --gris-clair: #cbd5e1;
-    --noir: #0f0f0f;
-    --blanc: #ffffff;
-    --bleu-accent: #1e90ff;
-    --bleu-accent-hover: #0074d9;
-  }
-  
-  /* 🔄 Reset + base */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", sans-serif;
-  }
-  
-  body {
-    background: linear-gradient(-45deg, #0a192f, #1e293b, #0f0f0f, #1e90ff);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    min-height: 100vh;
-    color: var(--blanc);
-    line-height: 1.6;
-  }
-  
-  @keyframes gradientBG {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-  
-  /* ⛑️ HEADER (transparent + flou + logo plus grand) */
-  header {
-    background-color: rgba(0, 0, 0, 0); /* totalement transparent */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: none; /* tu peux l'enlever ou la remettre si tu veux une séparation visuelle */
-  }
-  
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo-img {
-    height: 100px;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-  }
-  
-  .logo-img:hover {
-    transform: scale(1.05);
-  }
-  
-  header .logo-container a {
-    text-decoration: none;
-  }
-  
-  /* 📂 NAVIGATION */
+  --color-bg1: #0a0f1c;         /* Bleu nuit très foncé */
+  --color-bg2: #111a2e;         /* Bleu-gris profond */
+  --color1: 25, 90, 160;        /* Bleu profond */
+  --color2: 40, 60, 180;        /* Indigo froid */
+  --color3: 30, 130, 190;       /* Bleu-vert doux et foncé */
+  --color4: 10, 60, 150;        /* Bleu marine */
+  --color5: 60, 90, 200;        /* Bleu désaturé légèrement lumineux */
+  --color-interactive: 80, 110, 255; /* Bleu électrique mais foncé */
+
+  --circle-size: 80%;
+  --blending: hard-light;
+
+  --gris-clair: #cbd5e1;
+  --blanc: #ffffff;
+  --noir: #0f0f0f;
+  --bleu-accent: #1e90ff;
+  --bleu-accent-hover: #0074d9;
+}
+
+
+
+/* 🔄 Reset + base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--blanc);
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 🎆 Fond animé "bubbles" */
+.gradient-bg {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  background: linear-gradient(40deg, var(--color-bg1), var(--color-bg2));
+  top: 0;
+  left: 0;
+  z-index: -10;
+}
+
+.gradient-bg svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.gradients-container {
+  filter: url(#goo) blur(40px);
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.g1, .g2, .g3, .g4, .g5, .interactive {
+  position: absolute;
+  mix-blend-mode: var(--blending);
+  border-radius: 50%;
+}
+
+.g1 {
+  background: radial-gradient(circle, rgba(var(--color1), 0.8) 0%, rgba(var(--color1), 0) 50%);
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size)/2);
+  left: calc(50% - var(--circle-size)/2);
+  animation: moveVertical 30s ease infinite;
+}
+
+.g2 {
+  background: radial-gradient(circle, rgba(var(--color2), 0.8) 0%, rgba(var(--color2), 0) 50%);
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size)/2);
+  left: calc(50% - var(--circle-size)/2);
+  transform-origin: calc(50% - 400px);
+  animation: moveInCircle 20s reverse infinite;
+}
+
+.g3 {
+  background: radial-gradient(circle, rgba(var(--color3), 0.8) 0%, rgba(var(--color3), 0) 50%);
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size)/2 + 200px);
+  left: calc(50% - var(--circle-size)/2 - 500px);
+  transform-origin: calc(50% + 400px);
+  animation: moveInCircle 40s linear infinite;
+}
+
+.g4 {
+  background: radial-gradient(circle, rgba(var(--color4), 0.8) 0%, rgba(var(--color4), 0) 50%);
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size)/2);
+  left: calc(50% - var(--circle-size)/2);
+  transform-origin: calc(50% - 200px);
+  animation: moveHorizontal 40s ease infinite;
+  opacity: 0.7;
+}
+
+.g5 {
+  background: radial-gradient(circle, rgba(var(--color5), 0.8) 0%, rgba(var(--color5), 0) 50%);
+  width: calc(var(--circle-size) * 2);
+  height: calc(var(--circle-size) * 2);
+  top: calc(50% - var(--circle-size));
+  left: calc(50% - var(--circle-size));
+  transform-origin: calc(50% - 800px) calc(50% + 200px);
+  animation: moveInCircle 20s ease infinite;
+}
+
+.interactive {
+  background: radial-gradient(circle, rgba(var(--color-interactive), 0.8) 0%, rgba(var(--color-interactive), 0) 50%);
+  width: 100%;
+  height: 100%;
+  top: -50%;
+  left: -50%;
+  opacity: 0.7;
+}
+
+@keyframes moveInCircle {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes moveVertical {
+  0% { transform: translateY(-50%); }
+  50% { transform: translateY(50%); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes moveHorizontal {
+  0% { transform: translateX(-50%) translateY(-10%); }
+  50% { transform: translateX(50%) translateY(10%); }
+  100% { transform: translateX(-50%) translateY(-10%); }
+}
+
+/* ⛑️ HEADER (transparent) */
+header {
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  height: 70px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+header .logo-container a {
+  text-decoration: none;
+}
+
+/* 📂 NAVIGATION */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: var(--blanc);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: var(--bleu-accent);
+}
+
+/* 🌌 HERO */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
+  text-align: center;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  color: var(--gris-clair);
+}
+
+/* 🟦 BOUTON */
+.btn {
+  background-color: var(--bleu-accent);
+  color: var(--blanc);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--bleu-accent-hover);
+}
+
+/* ⚓ FOOTER */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  color: var(--gris-clair);
+  position: relative;
+  z-index: 1;
+}
+
+/* 🔐 LOGIN / SIGNUP */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.login-box {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-logo {
+  height: 60px;
+  margin-bottom: 1.5rem;
+}
+
+.login-box h2 {
+  color: var(--blanc);
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--gris-clair);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #1e293b;
+  color: var(--blanc);
+  font-size: 1rem;
+}
+
+.form-group input:focus {
+  border-color: var(--bleu-accent);
+  outline: none;
+}
+
+.signup-link {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--gris-clair);
+}
+
+.signup-link a {
+  color: var(--bleu-accent);
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
   nav ul {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
   }
-  
-  nav a {
-    color: var(--blanc);
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.3s;
-  }
-  
-  nav a:hover {
-    color: var(--bleu-accent);
-  }
-  
-  /* 🌌 HERO */
-  .hero {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 85vh;
-    text-align: center;
-    padding: 0 1rem;
-  }
-  
+
   .hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 2.2rem;
   }
-  
+
   .hero-content p {
-    font-size: 1.3rem;
-    margin-bottom: 2rem;
-    color: var(--gris-clair);
-  }
-  
-  /* 🟦 BOUTON */
-  .btn {
-    background-color: var(--bleu-accent);
-    color: var(--blanc);
-    padding: 0.75rem 1.5rem;
-    border: none;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn:hover {
-    background-color: var(--bleu-accent-hover);
-  }
-  
-  /* ⚓ FOOTER */
-  footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    font-size: 0.9rem;
-    color: var(--gris-clair);
-  }
-  
-  /* 🔐 LOGIN / SIGNUP */
-  .login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  
-  .login-box {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 2rem 2.5rem;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-  }
-  
-  .login-logo {
-    height: 60px;
-    margin-bottom: 1.5rem;
-  }
-  
-  .login-box h2 {
-    color: var(--blanc);
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-group {
-    text-align: left;
-    margin-bottom: 1.2rem;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--gris-clair);
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 0.6rem;
-    border: 1px solid #333;
-    border-radius: 5px;
-    background-color: #1e293b;
-    color: var(--blanc);
     font-size: 1rem;
   }
-  
-  .form-group input:focus {
-    border-color: var(--bleu-accent);
-    outline: none;
-  }
-  
-  .signup-link {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: var(--gris-clair);
-  }
-  
-  .signup-link a {
-    color: var(--bleu-accent);
-    text-decoration: none;
-  }
-  
-  .signup-link a:hover {
-    text-decoration: underline;
-  }
-  
-  /* 📱 RESPONSIVE */
-  @media (max-width: 768px) {
-    nav ul {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  
-    .hero-content h1 {
-      font-size: 2.2rem;
-    }
-  
-    .hero-content p {
-      font-size: 1rem;
-    }
-  }
-  
+}
