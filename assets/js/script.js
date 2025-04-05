@@ -2,6 +2,17 @@
 import { marked } from 'https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js';
 
 export function initEditor() {
+  // 🔐 Vérifie connexion
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const warningPopup = document.getElementById("auth-warning");
+
+  if (!isLoggedIn || isLoggedIn !== "true") {
+    if (warningPopup) warningPopup.classList.remove("hidden");
+    return; // on bloque l'éditeur si non connecté
+  }
+
+  // Le reste de ton code (rendu preview, PDF, etc)
+
   const textarea = document.getElementById("markdown-input");
   const preview = document.getElementById("markdown-preview");
   const downloadBtn = document.getElementById("download-pdf");
@@ -17,6 +28,12 @@ export function initEditor() {
     preview.innerHTML = html;
     if (window.MathJax) MathJax.typesetPromise([preview]);
   }
+
+  const current = JSON.parse(localStorage.getItem("noteForgeCurrent"));
+    if (current) {
+    textarea.value = current.content;
+    localStorage.removeItem("noteForgeCurrent");
+    }
 
   textarea.addEventListener("input", updatePreview);
   updatePreview();
@@ -62,6 +79,22 @@ export function initEditor() {
   
       document.body.removeChild(container); // Nettoyage
     });
+  });
+  
+  document.getElementById("save-note").addEventListener("click", () => {
+    const title = prompt("Titre de la note :");
+    if (!title) return;
+  
+    const notes = JSON.parse(localStorage.getItem("noteForgeNotes") || "[]");
+    const newNote = {
+      id: Date.now().toString(),
+      title: title,
+      content: textarea.value,
+      createdAt: new Date().toISOString()
+    };
+    notes.push(newNote);
+    localStorage.setItem("noteForgeNotes", JSON.stringify(notes));
+    alert("Note enregistrée !");
   });
   
 }
