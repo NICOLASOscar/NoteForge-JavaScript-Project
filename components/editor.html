@@ -1,10 +1,24 @@
 <div class="editor-section">
   <div class="editor-toolbar">
     <button class="btn" id="download-pdf">⬇ Télécharger en PDF</button>
+
+    <input
+      type="text"
+      id="md-filename"
+      placeholder="Nom du fichier (.md)"
+      class="btn"
+      style="width: 200px"
+    />
+    <button id="download-md" class="btn" type="button">💾 Télécharger en .md</button>
+
+    <input type="file" id="import-md" accept=".md" class="btn" />
   </div>
 
   <div class="editor-grid">
-    <textarea id="markdown-input" placeholder="Écris ton Markdown ou LaTeX ici..."></textarea>
+    <textarea
+      id="markdown-input"
+      placeholder="Écris ton Markdown ou LaTeX ici..."
+    ></textarea>
     <div class="preview" id="markdown-preview"></div>
   </div>
 </div>
