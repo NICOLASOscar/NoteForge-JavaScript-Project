@@ -2,6 +2,8 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
 export function initEditor() {
+
+  
   const textarea = document.getElementById("markdown-input");
   const preview = document.getElementById("markdown-preview");
   const downloadBtn = document.getElementById("download-pdf");
@@ -20,6 +22,12 @@ export function initEditor() {
     filenameInput.value = `NoteForge_${today}`;
   }
 
+  textarea.addEventListener("scroll", () => {
+    const scrollRatio = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
+    preview.scrollTop = scrollRatio * (preview.scrollHeight - preview.clientHeight);
+  });
+  
+  
   // Chargement depuis localStorage ou exemple par défaut
 const saved = localStorage.getItem("noteContent");
 if (saved) {

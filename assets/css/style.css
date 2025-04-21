@@ -376,8 +376,10 @@ footer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  min-height: 500px;
+  height: 500px; /* hauteur fixe */
 }
+
+
 
 #markdown-input {
   width: 100%;
@@ -390,6 +392,7 @@ footer {
   font-family: monospace;
   font-size: 1rem;
   resize: none;
+  overflow: auto; /* important pour le scroll */
 }
 
 .preview {
@@ -398,8 +401,12 @@ footer {
   border-radius: 8px;
   color: white;
   border: 1px solid #333;
-  overflow: auto;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  max-height: 100%; /* Ajoute ceci */
 }
+
 
 /* ✅ PAGE Fonctionnalités */
 .fonctionnalite-section {
@@ -462,4 +469,37 @@ footer {
   .fonctionnalite-section ul li {
     font-size: 1rem;
   }
+}
+
+/* Scrollbar moderne avec fondu */
+.preview,
+#markdown-input {
+  scrollbar-width: thin; /* pour Firefox */
+  scrollbar-color: var(--bleu-accent) transparent;
+  position: relative;
+}
+
+/* Chrome/Edge/Brave/Opera */
+.preview::-webkit-scrollbar,
+#markdown-input::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+.preview::-webkit-scrollbar-track,
+#markdown-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.preview::-webkit-scrollbar-thumb,
+#markdown-input::-webkit-scrollbar-thumb {
+  background-color: var(--bleu-accent);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Classe active pour affichage */
+.show-scrollbar::-webkit-scrollbar-thumb {
+  opacity: 0.6;
 }
