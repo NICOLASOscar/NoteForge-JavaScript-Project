@@ -175,14 +175,16 @@ if (downloadTxt) {
     importInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (!file) return;
-
+  
       const reader = new FileReader();
       reader.onload = function (evt) {
         textarea.value = evt.target.result;
         updatePreview();
         localStorage.setItem("noteContent", textarea.value);
+        importInput.value = ""; // <-- Important pour permettre de re-sélectionner le même fichier
       };
       reader.readAsText(file);
     });
-  }  
+  }
+  
 }
