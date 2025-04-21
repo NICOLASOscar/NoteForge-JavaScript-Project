@@ -67,16 +67,16 @@ NoteForge/
 
 ## ⚙️ Installation locale
 
-1. Clonez le dépôt :
+1. Clonez ce dépôt :
    ```bash
-   git clone 
+   git clone https://github.com/votre-utilisateur/NoteForge.git
    ```
-2. Ouvrez `index.html` dans votre navigateur, ou servez le projet avec :
-   ```bash
-   npx serve .
-   # ou
-   python3 -m http.server
-   ```
+2. Ouvrez le dossier avec Visual Studio Code.
+3. Installez et lancez l’une des extensions suivantes :
+   - [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+   - ou [Five Server](https://marketplace.visualstudio.com/items?itemName=yandeu.five-server)
+
+4. Faites un clic droit sur `index.html` → **"Open with Live Server"** (ou Five Server)
 
 ---
 
