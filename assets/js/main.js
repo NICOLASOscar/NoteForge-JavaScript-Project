@@ -1,36 +1,39 @@
-// 🔧 Fonction utilitaire pour charger header/footer
+// --- Fonction utilitaire pour charger un composant HTML dans un conteneur (header, footer, etc.)
 async function loadComponent(selector, url) {
   try {
     const res = await fetch(url);
     const html = await res.text();
     document.querySelector(selector).innerHTML = html;
   } catch (err) {
-    console.error(`Erreur lors du chargement de ${url}`, err);
+    console.error(`Erreur lors du chargement du composant ${url}`, err);
   }
 }
 
-// 🚀 Fonction pour charger une vue dans #main-container
+// --- Fonction principale pour charger une vue dans #main-container
 async function loadPage(path) {
   try {
     const res = await fetch(path);
     const html = await res.text();
 
     const container = document.getElementById("main-container");
+
+    // Analyse du HTML pour extraire le contenu
     const newBody = new DOMParser().parseFromString(html, "text/html").body;
     const newContent = newBody.querySelector("#main-container") || newBody;
 
+    // Injection du contenu dans le conteneur principal
     container.innerHTML = newContent.innerHTML;
 
-    // ✅ Injecter script pour l’éditeur uniquement si on est sur editor.html
+    // Si la vue est l'éditeur, charge dynamiquement le module script.js
     if (path.includes("editor.html")) {
       setTimeout(() => {
-        import("./script.js") // chemin relatif à main.js
+        import("./script.js")
           .then((module) => module.initEditor())
-          .catch((err) => console.error("Erreur dans initEditor() :", err));
-      }, 50);
+          .catch((err) => console.error("Erreur lors de l'initialisation de l'éditeur :", err));
+      }, 50); // petit délai pour s'assurer que le DOM est bien injecté
     }
 
-    // (Optionnel) charger scripts inline spécifiques si présents
+    // Recherche et exécution des <script> inline présents dans la vue
     const scripts = container.querySelectorAll("script");
     scripts.forEach((oldScript) => {
       const newScript = document.createElement("script");
@@ -42,46 +45,47 @@ async function loadPage(path) {
       document.body.appendChild(newScript);
     });
   } catch (err) {
-    console.error("Erreur de chargement de la page :", err);
+    console.error("Erreur lors du chargement de la page :", err);
     document.getElementById("main-container").innerHTML =
       `<p style="color:red;">Erreur lors du chargement de la page.</p>`;
   }
 }
 
-// ✅ Initialisation principale
+// --- Initialisation au chargement du DOM
 document.addEventListener("DOMContentLoaded", async () => {
+  // Chargement des composants statiques (header/footer)
   await loadComponent("#header-container", "components/header.html");
   await loadComponent("#footer-container", "components/footer.html");
 
-  // 📥 Charge la page d'accueil par défaut
+  // Chargement par défaut de la page d'accueil
   loadPage("components/home.html");
 
-  // 🧭 Gère les clics internes (routage SPA)
+  // Gestion des clics internes (navigation SPA)
   document.body.addEventListener("click", async (e) => {
     const link = e.target.closest("a");
     if (!link) return;
 
-    // ✅ Ignorer les liens de téléchargement
-    if (link.hasAttribute("download")) return;
-
+    // Ignore les liens de téléchargement ou externes
     const href = link.getAttribute("href");
     if (
-      href &&
-      !href.startsWith("http") &&
-      !href.startsWith("#") &&
-      !href.endsWith(".png") &&
-      !href.endsWith(".css") &&
-      !href.endsWith(".js")
+      link.hasAttribute("download") ||
+      !href ||
+      href.startsWith("http") ||
+      href.startsWith("#") ||
+      href.endsWith(".png") ||
+      href.endsWith(".css") ||
+      href.endsWith(".js")
     ) {
-      e.preventDefault();
-      await loadPage(href);
+      return;
     }
+
+    e.preventDefault();
+    await loadPage(href);
   });
 
-  // 🔁 Support du bouton retour / suivant du navigateur
+  // Support des boutons précédent / suivant du navigateur
   window.addEventListener("popstate", () => {
-    const path =
-      location.pathname.replace(/^\/+/, "") || "components/home.html";
+    const path = location.pathname.replace(/^\/+/, "") || "components/home.html";
     loadPage(path);
   });
 });

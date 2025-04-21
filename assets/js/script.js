@@ -1,39 +1,32 @@
-// Import ESModule de marked
+// Import de la bibliothèque 'marked' pour le rendu Markdown
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
 export function initEditor() {
-
-  
+  // Récupération des éléments nécessaires du DOM
   const textarea = document.getElementById("markdown-input");
   const preview = document.getElementById("markdown-preview");
   const downloadBtn = document.getElementById("download-pdf");
   const downloadMd = document.getElementById("download-md");
+  const downloadTxt = document.getElementById("download-txt");
   const filenameInput = document.getElementById("md-filename");
   const importInput = document.getElementById("import-md");
+  const clearBtn = document.getElementById("clear-editor");
 
+  // Sécurité : vérifie que les éléments essentiels sont présents
   if (!textarea || !preview || !downloadBtn) {
-    console.warn("initEditor() : éléments non trouvés !");
+    console.warn("initEditor() : certains éléments DOM sont introuvables.");
     return;
   }
 
-  // Remplir automatiquement le nom de fichier par défaut
+  // Remplit automatiquement le champ nom de fichier avec la date du jour
   if (filenameInput) {
-    const today = new Date().toISOString().slice(0, 10); // ex: 2025-04-20
+    const today = new Date().toISOString().slice(0, 10);
     filenameInput.value = `NoteForge_${today}`;
   }
 
-  textarea.addEventListener("scroll", () => {
-    const scrollRatio = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
-    preview.scrollTop = scrollRatio * (preview.scrollHeight - preview.clientHeight);
-  });
-  
-  
-  // Chargement depuis localStorage ou exemple par défaut
-const saved = localStorage.getItem("noteContent");
-if (saved) {
-  textarea.value = saved;
-} else {
-  textarea.value = `# Bienvenue sur NoteForge 👋
+  // Récupère le contenu localStorage ou injecte un exemple de démarrage
+  const saved = localStorage.getItem("noteContent");
+  textarea.value = saved || `# Bienvenue sur NoteForge 👋
 
 Vous pouvez commencer à écrire en **Markdown** ici.
 
@@ -48,12 +41,15 @@ Vous pouvez commencer à écrire en **Markdown** ici.
 
 > Le rendu apparaît automatiquement à droite 🪄
 
-Bon courage ✨
-`;
-}
+Bon courage ✨`;
 
+  // Synchronise le scroll vertical entre l'éditeur et la preview
+  textarea.addEventListener("scroll", () => {
+    const scrollRatio = textarea.scrollTop / (textarea.scrollHeight - textarea.clientHeight);
+    preview.scrollTop = scrollRatio * (preview.scrollHeight - preview.clientHeight);
+  });
 
-  // Aperçu Markdown + LaTeX
+  // Fonction de mise à jour de la preview HTML et LaTeX
   function updatePreview() {
     const raw = textarea.value;
     const html = marked.parse(raw);
@@ -61,36 +57,45 @@ Bon courage ✨
     if (window.MathJax) MathJax.typesetPromise([preview]);
   }
 
+  // Mise à jour de la preview à chaque modification de texte
   textarea.addEventListener("input", () => {
     updatePreview();
     localStorage.setItem("noteContent", textarea.value);
   });
 
+  // Premier rendu
   updatePreview();
 
-  // Export PDF
+  // --- Export PDF avec html2canvas + jsPDF ---
   downloadBtn.addEventListener("click", async () => {
     if (window.MathJax) await MathJax.typesetPromise([preview]);
 
+    // Crée une copie de la preview à exporter
     const cleanContent = document.createElement("div");
     cleanContent.innerHTML = preview.innerHTML;
-    cleanContent.style.fontFamily = "sans-serif";
-    cleanContent.style.color = "#000000";
-    cleanContent.style.background = "#ffffff";
-    cleanContent.style.padding = "2rem";
-    cleanContent.style.width = "800px";
-    cleanContent.style.lineHeight = "1.5";
-    cleanContent.style.fontSize = "1rem";
+    Object.assign(cleanContent.style, {
+      fontFamily: "sans-serif",
+      color: "#000000",
+      background: "#ffffff",
+      padding: "2rem",
+      width: "800px",
+      lineHeight: "1.5",
+      fontSize: "1rem"
+    });
 
+    // Conteneur temporaire hors-écran pour html2canvas
     const container = document.createElement("div");
-    container.style.position = "fixed";
-    container.style.top = "-9999px";
-    container.style.left = "0";
-    container.style.zIndex = "-1";
-    container.style.background = "#ffffff";
+    Object.assign(container.style, {
+      position: "fixed",
+      top: "-9999px",
+      left: "0",
+      zIndex: "-1",
+      background: "#ffffff"
+    });
     container.appendChild(cleanContent);
     document.body.appendChild(container);
 
+    // Génère le PDF à partir du rendu HTML
     html2canvas(cleanContent, {
       backgroundColor: "#ffffff",
       scale: 2,
@@ -108,83 +113,73 @@ Bon courage ✨
     });
   });
 
-  // Export .md
+  // --- Export Markdown brut (.md) ---
   downloadMd.addEventListener("click", (e) => {
     e.preventDefault();
-    e.stopPropagation(); // stoppe toute interférence SPA
+    e.stopPropagation();
 
     const content = textarea.value || "# Note vide";
     let filename = filenameInput?.value.trim() || "NoteForge_export";
     if (!filename.endsWith(".md")) filename += ".md";
 
-    const blob = new Blob([content], {
-      type: "text/markdown;charset=utf-8",
-    });
+    const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
 
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = filename;
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     setTimeout(() => URL.revokeObjectURL(link.href), 100);
   });
 
-  const clearBtn = document.getElementById("clear-editor");
+  // --- Export texte brut (.txt) ---
+  if (downloadTxt) {
+    downloadTxt.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    if (confirm("Souhaitez-vous vraiment vider la note ?")) {
-      textarea.value = "";
-      updatePreview(); // met à jour la preview
-      localStorage.removeItem("noteContent"); // supprime du localStorage aussi
-    }
-  });
-}
+      const content = textarea.value || "Note vide";
+      let filename = filenameInput?.value.trim() || "NoteForge_export";
+      if (!filename.endsWith(".txt")) filename += ".txt";
 
-const downloadTxt = document.getElementById("download-txt");
+      const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
 
-if (downloadTxt) {
-  downloadTxt.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const content = textarea.value || "Note vide";
-    let filename = filenameInput?.value.trim() || "NoteForge_export";
-    if (!filename.endsWith(".txt")) filename += ".txt";
-
-    const blob = new Blob([content], {
-      type: "text/plain;charset=utf-8",
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(link.href), 100);
     });
+  }
 
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
+  // --- Réinitialisation du contenu ---
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (confirm("Souhaitez-vous vraiment vider la note ?")) {
+        textarea.value = "";
+        updatePreview();
+        localStorage.removeItem("noteContent");
+      }
+    });
+  }
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    setTimeout(() => URL.revokeObjectURL(link.href), 100);
-  });
-}
-
-
-  // Import .md
+  // --- Import d'un fichier .md ---
   if (importInput) {
     importInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (!file) return;
-  
+
       const reader = new FileReader();
       reader.onload = function (evt) {
         textarea.value = evt.target.result;
         updatePreview();
         localStorage.setItem("noteContent", textarea.value);
-        importInput.value = ""; // <-- Important pour permettre de re-sélectionner le même fichier
+        importInput.value = ""; // Réinitialise l'input pour permettre une nouvelle sélection
       };
       reader.readAsText(file);
     });
   }
-  
 }
