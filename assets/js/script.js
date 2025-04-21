@@ -20,11 +20,30 @@ export function initEditor() {
     filenameInput.value = `NoteForge_${today}`;
   }
 
-  // Chargement depuis localStorage
-  const saved = localStorage.getItem("noteContent");
-  if (saved) {
-    textarea.value = saved;
-  }
+  // Chargement depuis localStorage ou exemple par défaut
+const saved = localStorage.getItem("noteContent");
+if (saved) {
+  textarea.value = saved;
+} else {
+  textarea.value = `# Bienvenue sur NoteForge 👋
+
+Vous pouvez commencer à écrire en **Markdown** ici.
+
+## Exemple :
+- ✅ **Gras** : \`**texte**\`
+- ✅ *Italique* : \`*texte*\`
+- ✅ Code : \`console.log("Hello")\`
+- ✅ Liste :
+  - Élément 1
+  - Élément 2
+- ✅ Formule LaTeX : $ \\frac{a}{b} = c $
+
+> Le rendu apparaît automatiquement à droite 🪄
+
+Bon courage ✨
+`;
+}
+
 
   // Aperçu Markdown + LaTeX
   function updatePreview() {
@@ -104,6 +123,45 @@ export function initEditor() {
     setTimeout(() => URL.revokeObjectURL(link.href), 100);
   });
 
+  const clearBtn = document.getElementById("clear-editor");
+
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    if (confirm("Souhaitez-vous vraiment vider la note ?")) {
+      textarea.value = "";
+      updatePreview(); // met à jour la preview
+      localStorage.removeItem("noteContent"); // supprime du localStorage aussi
+    }
+  });
+}
+
+const downloadTxt = document.getElementById("download-txt");
+
+if (downloadTxt) {
+  downloadTxt.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const content = textarea.value || "Note vide";
+    let filename = filenameInput?.value.trim() || "NoteForge_export";
+    if (!filename.endsWith(".txt")) filename += ".txt";
+
+    const blob = new Blob([content], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(link.href), 100);
+  });
+}
+
+
   // Import .md
   if (importInput) {
     importInput.addEventListener("change", (e) => {
@@ -118,5 +176,5 @@ export function initEditor() {
       };
       reader.readAsText(file);
     });
-  }
+  }  
 }

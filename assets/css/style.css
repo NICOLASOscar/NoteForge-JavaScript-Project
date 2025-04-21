@@ -401,3 +401,65 @@ footer {
   overflow: auto;
 }
 
+/* ✅ PAGE Fonctionnalités */
+.fonctionnalite-section {
+  margin: 2rem auto;
+  max-width: 800px;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  color: var(--gris-clair);
+  backdrop-filter: blur(6px);
+}
+
+.fonctionnalite-section h2 {
+  font-size: 1.8rem;
+  color: var(--bleu-accent);
+  margin-bottom: 1rem;
+  border-left: 5px solid var(--bleu-accent-hover);
+  padding-left: 1rem;
+}
+
+.fonctionnalite-section p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.fonctionnalite-section ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1rem;
+}
+
+.fonctionnalite-section ul li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.fonctionnalite-section ul li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--bleu-accent);
+  font-weight: bold;
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .fonctionnalite-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .fonctionnalite-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .fonctionnalite-section p,
+  .fonctionnalite-section ul li {
+    font-size: 1rem;
+  }
+}
