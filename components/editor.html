@@ -1,32 +1,24 @@
-<div id="main-container">
-  <main class="editor-section">
-    <div class="editor-toolbar">
-      <button class="btn" id="download-pdf">⬇ Télécharger en PDF</button>
-      <button class="btn" id="save-note">💾 Enregistrer</button>
-    </div>
+<div class="editor-section">
+  <div class="editor-toolbar">
+    <input
+      type="text"
+      id="md-filename"
+      placeholder="Nom du fichier (.md)"
+      class="btn"
+      style="width: 200px"
+    />
+    <button class="btn" id="clear-editor">🗑️ Vider</button>
+    <button class="btn" id="download-pdf">⬇ Télécharger en PDF</button>
+    <button class="btn" id="download-txt">⬇ Télécharger en TXT</button>
+    <button id="download-md" class="btn" type="button">💾 Télécharger en .md</button>
+    <input type="file" id="import-md" accept=".md" class="btn" />
+  </div>
 
-    <div class="editor-grid">
-      <textarea id="markdown-input" placeholder="Écris ton Markdown ou LaTeX ici..."></textarea>
-      <div class="preview" id="markdown-preview"></div>
-    </div>
-  </main>
-
-  <!-- 🔔 Pop-up avertissement utilisateur non connecté -->
-  <div id="auth-warning" class="popup-warning hidden">
-    <div class="popup-content">
-      <h3>⚠️ Accès restreint</h3>
-      <p>Vous devez être connecté pour utiliser l'éditeur.</p>
-      <div class="popup-actions">
-        <a href="/components/login.html" class="btn btn-popup">Se connecter</a>
-        <a href="/components/signup.html" class="btn btn-popup">Créer un compte</a>
-      </div>
-    </div>
+  <div class="editor-grid">
+    <textarea
+      id="markdown-input"
+      placeholder="Écris ton Markdown ou LaTeX ici..."
+    ></textarea>
+    <div class="preview" id="markdown-preview"></div>
   </div>
 </div>
-
-<script>
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  if (!isLoggedIn || isLoggedIn !== "true") {
-    document.querySelector("#auth-warning").classList.remove("hidden");
-  }
-</script>

@@ -5,27 +5,25 @@
         <img src="/assets/img/NoteForgeLogoWTextWhite.png" alt="Logo NoteForge" class="login-logo" />
       </a>
       <h2>Créer un compte</h2>
-
-      <form id="signup-form">
+      <form action="#" method="POST">
         <div class="form-group">
-          <label for="firstName">Prénom</label>
-          <input type="text" id="firstName" name="firstName" required />
+          <label for="username">Nom d'utilisateur</label>
+          <input type="text" id="username" name="username" placeholder="Choisissez un nom" required />
         </div>
         <div class="form-group">
-          <label for="lastName">Nom</label>
-          <input type="text" id="lastName" name="lastName" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
+          <label for="email">Adresse e-mail</label>
+          <input type="email" id="email" name="email" placeholder="Entrez votre e-mail" required />
         </div>
         <div class="form-group">
           <label for="password">Mot de passe</label>
-          <input type="password" id="password" name="password" required />
+          <input type="password" id="password" name="password" placeholder="••••••••" required />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirmer le mot de passe</label>
+          <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required />
         </div>
         <button type="submit" class="btn">Créer un compte</button>
-        <p id="signup-feedback" class="signup-feedback"></p>
-        <p class="signup-link">Déjà inscrit ? <a href="/components/login.html">Connexion</a></p>
+        <p class="signup-link">Déjà inscrit ? <a href="login.html">Se connecter</a></p>
       </form>
     </div>
   </div>
